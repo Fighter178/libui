@@ -1,7 +1,6 @@
 # LibUI - Overview
 
-This code exports a number of utility functions and classes that can be used to build user interfaces. Some of the functions are utility functions, while others are more advanced, such as the Component and Store classes. The LibUI_If class is a custom HTML element that can be used to conditionally render HTML elements based on an expression.
-## Functions and Classes
+This library exports a number of utility functions and classes that can be used to build user interfaces. Some of the functions are utility functions, while others are more advanced, such as the Component and Store classes.
 ### `$` function
 
 The `$` function is a utility function that returns the first element in the document or a given HTMLElement that matches the given selector.
