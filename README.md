@@ -1,6 +1,7 @@
-# LibUI - Overview
+# Overview
 
-This library exports a number of utility functions and classes that can be used to build user interfaces. Some of the functions are utility functions, while others are more advanced, such as the Component and Store classes.
+This code exports a number of utility functions and classes that can be used to build user interfaces. Some of the functions are utility functions, while others are more advanced, such as the Component and Store classes. The LibUI_If class is a custom HTML element that can be used to conditionally render HTML elements based on an expression.
+## Functions and Classes
 ### `$` function
 
 The `$` function is a utility function that returns the first element in the document or a given HTMLElement that matches the given selector.
@@ -30,20 +31,32 @@ The Component function is a higher-level utility function that allows you to def
 
     comp:ComponentFunction - A function that returns an object with properties html, css, and js representing the HTML, CSS, and JavaScript code to render the component.
     options?:ComponentOptions (optional) - An object that contains options for the component.
+#### Options Parameter
+An object which defines options for the component.
 
+Name - Type (default) | description
+
+    sandbox - boolean (true) | Determines if the JS code within the component function should have limited permissions to access the global scope (eg. document, window, and globalThis will return null), helps prevent attacks with document.cookie, for example.
+    rootMode - "open"|"closed" (open) | Determines the mode of the ShadowRoot.
+#### How to write the JavaScript for a component
+Within the JS key for the ComponentFunctionResult interface, the variables`this` references the DOM of the component, and `self` references the element itself, for example, to get attributes. If sandboxed, you must use `self.querySelector()` to retrieve child elements, or `self.children`. You cannot use `document.querySelector()` as it is sandboxed, if not sandboxed you have access to all of the javascript functions. When sandboxed, `document`, `window`, and `globalThis` variables will return `null`. 
+
+To re-render the component within the JavaScript of the component, use the `render()` function. This is passed to the JS regardless of it is sandboxed or not.
+#### Notes
+The DOM for the element is within an open `shadowRoot`, however, you can close it with the options parameter.
 ## ComponentFunctionResult interface
 
 The `ComponentFunctionResult` interface represents the object returned by the `comp` parameter in the Component function. It must have properties html, css, and js that are of type string or null.
 ComponentFunction type
 
-The ComponentFunction type represents the type of the comp parameter in the Component function. It is a function that takes two parameters, accessing and render, and returns an object of type ComponentFunctionResult.
+The ComponentFunction type represents the type of the comp parameter in the Component function. It is a function that takes two parameters, accessing, which defines what LibUI is currently accessing,  and render, which will allow you to re-render the component if necessary, and returns an object of type ComponentFunctionResult.
 ## Store class
 
 The Store class is a utility class that can be used to store data in a way that allows other parts of the application to subscribe to changes in the data.
 ### Properties
 
     value - The value stored in the store. (can be written, and will notify subscribers too)
-    subscribers - An array of functions that will be called when the value of the store changes.
+    subscribers - An array of functions that will be called when the value of the store changes. (read-only)
 
 ### Methods
 
@@ -100,6 +113,9 @@ The `lui-each` component will render its content multiple times depending on the
 ```html
 <lui-each of="5">
     <p>This is duplicated 5 times</p>
+</lui-each>
+<lui-each of="5*5">
+    <p>This is duplicated 25 times.</p>
 </lui-each>
 ```
 ##### Advanced Example
